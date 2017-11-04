@@ -1,79 +1,81 @@
 conky.config = {
-alignment = 'top_left',
-background = false,
-border_width = 1,
-cpu_avg_samples = 1,
-color0 = '6a939f',
-color1 = '95c7be',
-color2 = '565853',
-default_color = 'white',
-default_outline_color = 'white',
-default_shade_color = 'white',
-default_bar_width=150,
-default_bar_height=12,
-default_graph_width=150,
-default_graph_height=12,
-draw_borders = false,
-draw_graph_borders = true,
-draw_outline = false,
-draw_shades = false,
-double_buffer = true,
-use_xft = true,
-font = 'DejaVu Sans Mono:size=10',
-gap_x = 20,
-gap_y = 20,
-minimum_height = 5,
-minimum_width = 5,
-net_avg_samples = 2,
-no_buffers = true,
-out_to_console = false,
-out_to_stderr = false,
-extra_newline = false,
-own_window = true,
-own_window_class = 'Conky',
-own_window_type = 'normal',
-own_window_hints = 'undecorated, below, sticky, skip_taskbar, skip_pager',
-own_window_transparent = true,
-own_window_argb_visual = true,
-pad_percents = 3.0,
-stippled_borders = 0,
-update_interval = 5.0,
-uppercase = false,
-use_spacer = 'left',
-show_graph_scale = false,
-show_graph_range = false
+    alignment = 'top_left',
+    background = false,
+    border_width = 1,
+    cpu_avg_samples = 1,
+	  color0 = '6a939f',
+	  color1 = '95c7be',
+	  color2 = '565853',
+	  default_color = 'white',
+    default_outline_color = 'white',
+    default_shade_color = 'white',
+    default_bar_width=100,
+	  default_bar_height=12,
+	  default_graph_width=100,
+	  default_graph_height=12,
+    draw_borders = false,
+    draw_graph_borders = true,
+    draw_outline = false,
+    draw_shades = false,
+	  double_buffer = true,
+    use_xft = true,
+    font = 'DejaVu Sans Mono:size=10',
+    gap_x = -1900,
+    gap_y = 20,
+    minimum_height = 5,
+	  minimum_width = 5,
+    net_avg_samples = 2,
+    no_buffers = true,
+    out_to_console = false,
+    out_to_stderr = false,
+    extra_newline = false,
+    own_window = true,
+    own_window_class = 'Conky',
+    own_window_type = 'normal',
+    own_window_hints = 'undecorated, below, sticky, skip_taskbar, skip_pager',
+	  own_window_transparent = true,
+	  own_window_argb_visual = true,
+	  pad_percents = 3.0,
+    stippled_borders = 0,
+    update_interval = 5.0,
+    uppercase = false,
+    use_spacer = 'left',
+    show_graph_scale = false,
+    show_graph_range = false
 }
 conky.text = [[
-$font      ┌───────────────────────────────────────────┐
-$font┌─────┤ ${font Terminus:size=10}Service Monitor - ${time %d %B %Y %H:%M:%S}$font │
-$font│     └────────────────────────────────────┬──────┘  ┌──────────────┐
-$font│                                          └─────────┤ Just Breathe │
-$font├───┬─${font Terminus:size=10}NAGIOS-HOST$font                                    └──────────────┘
-$font│   └───${font Terminus:size=10} Load  : ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_load -w 3,3,3 -c 5,5,5|awk '{print $1}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_load -w 3,3,3 -c 5,5,5|awk '{print $1}'}"=="WARNING"}${color orange}WARNING${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_load -w 3,3,3 -c 5,5,5|awk '{print $1}'}"=="CRITICAL"}${color red}CRITICAL${color}${endif}$font
-$font│
-$font├───┬─${font Terminus:size=10}Server1$font
-$font│   ├───${font Terminus:size=10} Shell : ${if_match "${exec python ~/.config/conky/scripts/portcheck-2.py |grep Server1-22|awk '{print $3}'}"=="open"}${color green}OPEN${color}${endif}${if_match "${exec python ~/.config/conky/scripts/portcheck-2.py|grep Server1-22|awk '{print $3}'}"!="open"}${color red}${font Terminus:bold:size=10}NO CONNECTION${color}${endif}${font}
-$font│   ├───${font Terminus:size=10} Load  : ${execgraph "ssh Server1 mpstat 1 1|tail -1|awk '{print $5}'|cut -c1-2"}
-$font│   ├───${font Terminus:size=10} Disk  : ${execbar ssh Server1 'df -kh|grep mapper'|awk '{print $5}'|cut -c1-2} ${voffset -2}${offset -64}${font Terminus:size=8}${color grey}${exec ssh Server1 df -kh|grep mapper|awk '{print $4" free"}'}${color}${font}
-$font│   └───${font Terminus:size=10} Temp  : ${exec ssh Server1 sensors|grep 'Physical'|awk '{print $4}'}
-$font│
-$font├───┬─${font Terminus:size=10}Server3 - ${if_match "${execi 600 ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_yum_updates}"=="0"}${color green}no updates${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H 0x00000.net -c check_yum_updates}"!="0"}${color orange}${execi 600 ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H 0x00000.net -c check_yum_updates} updates available!${color}${endif}$font$font
-$font│   ├───${font Terminus:size=10} Ping  : ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ping -H Server2 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ping -H Server2 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color} - ${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ping -H Server2 -w 3000.0,80% -c 5000.0,100% -p 1}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ping -H Server2 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color} - ${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ping -H Server2 -w 3000.0,80% -c 5000.0,100% -p 1}${endif}
-$font│   ├───${font Terminus:size=10} Shell : ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ssh -H Server2 -p 32022|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ssh -H Server2 -p 32022|awk '{print $2}'}"!="OK"}${color red}NO CONNECTION${color} - ${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ssh -H Server2 -p 32022}${endif}$font
-$font│   ├───${font Terminus:size=10} Load  : ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_load|awk '{print $1}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_load|awk '{print $1}'}"=="WARNING"}${color orange}WARNING${color} - ${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_load|awk '{print $7$8$9}'|cut -c1-14}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_load|awk '{print $1}'}"=="CRITICAL"}${color red}CRITICAL${color} - ${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_load|awk '{print $3$4$5}'|cut -c1-14}${endif}
-$font│   ├───${font Terminus:size=10} Users : ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_users|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_users|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color} ${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_users|awk '{print $3" "$4" "$5" "$6" "$7" "$8}'}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_users|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color} ${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_users|awk '{print $3" "$4" "$5" "$6" "$7" "$8}'}${endif}
-$font│   └───${font Terminus:size=10} Disk  : ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_disk|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_disk|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_disk|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color}${endif} - ${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_disk |awk '{print $7"MB free"}'}
-$font│
-$font├───┬─${font Terminus:size=10}Server3 - ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_apt|awk '{print $2}'|sed 's/.$//'}"=="OK"}${color green}no updates${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_apt|awk '{print $2}'|sed 's/.$//'}"!="OK"}${color orange}${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_apt|awk '{print $2" "$3" "$4" "$5" "$6" "$7}'}${color}${endif}$font
-$font│   ├───${font Terminus:size=10} Ping  : ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ping -H Server3 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ping -H Server3 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ping -H Server3 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color}${endif}
-$font│   ├───${font Terminus:size=10} Shell : ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ssh -H Server3 -p 32022|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ssh -H Server3 -p 32022|awk '{print $2}'}"!="OK"}${color red}NO CONNECTION${color}${endif}$font
-$font│   ├───${font Terminus:size=10} Load  : ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_load|awk '{print $1}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_load|awk '{print $1}'}"=="WARNING"}${color orange}WARNING${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_load|awk '{print $1}'}"=="CRITICAL"}${color red}CRITICAL${color}${endif}
-$font│   └───${font Terminus:size=10} Disk  : ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_disk|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_disk|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_disk|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color}${endif}
-$font│
-$font└───┬─${font Terminus:size=10}Server4 - ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_apt|awk '{print $2}'|sed 's/.$//'}"=="OK"}${color green}no updates${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_apt|awk '{print $2}'|sed 's/.$//'}"!="OK"}${color orange}${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_apt|awk '{print $2" "$3" "$4" "$5" "$6" "$7}'}${color}${endif}$font
-$font    ├───${font Terminus:size=10} Ping  : ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ping -H Server4 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ping -H Server4 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ping -H Server4 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color}${endif}
-$font    ├───${font Terminus:size=10} Shell : ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ssh -H Server4 -p 32022|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_ssh -H Server4 -p 32022|awk '{print $2}'}"!="OK"}${color red}NO CONNECTION${color}${endif}$font
-$font    ├───${font Terminus:size=10} Load  : ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_load|awk '{print $1}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_load|awk '{print $1}'}"=="WARNING"}${color orange}WARNING${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_load|awk '{print $1}'}"=="CRITICAL"}${color red}CRITICAL${color}${endif}
-$font    └───${font Terminus:size=10} Disk  : ${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_disk|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_disk|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color}${endif}${if_match "${exec ssh -l root nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_disk|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color}${endif}
-## ${if_match "${DOATHING}"=="open"}${color green}OPEN${color}${endif}${if_match "DOATHING"=="closed"}${color red}CLOSED${color}${endif}
+      ┌────────────────────────────────────────┐
+┌─────┤ Service Monitor - ${time %d %b %Y %H:%M:%S} │
+│     └─────────────────────────────────┬──────┘  ┌──────────────┐
+│                                       └─────────┤ Just Breathe │
+├──┬─nagios-server                                  └──────────────┘
+│  └─── Load  : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_load -w 3,3,3 -c 5,5,5|awk '{print $1}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_load -w 3,3,3 -c 5,5,5|awk '{print $1}'}"=="WARNING"}${color orange}WARNING${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_load -w 3,3,3 -c 5,5,5|awk '{print $1}'}"=="CRITICAL"}${color red}CRITICAL${color}${endif}
+│
+├──┬─Server1
+│  ├─── Ping  : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server1 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server1 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server1 -w 3000.0,80% -c 5000.0,100% -p 1}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server1 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server1 -w 3000.0,80% -c 5000.0,100% -p 1}${endif}
+│  ├─── Shell : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ssh -H Server1 -p 32022|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ssh -H Server1 -p 32022|awk '{print $2}'}"!="OK"}${color red}NO CONNECTION${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ssh -H Server1 -p 32022}${endif}
+│  ├─── Load  : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server1 -c check_load|awk '{print $1}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server1 -c check_load|awk '{print $1}'}"=="WARNING"}${color orange}WARNING${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server1 -c check_load|awk '{print $5$6$7}'|cut -c1-14}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server1 -c check_load|awk '{print $1}'}"=="CRITICAL"}${color red}CRITICAL${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server1 -c check_load|awk '{print $5$6$7}'|cut -c1-14}${endif}
+│  ├─── Users : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server1 -c check_users|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server1 -c check_users|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color} ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server1 -c check_users|awk '{print $3" "$4" "$5}'}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server1 -c check_users|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color} ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server1 -c check_users|awk '{print $3" "$4" "$5}'}${endif}
+│  └─── Disk  : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server1 -c check_disk|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server1 -c check_disk|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server1 -c check_disk|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color}${endif} - ${execbar ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server1 -c check_disk_percentage}
+│
+├──┬─Server2
+│  ├─── Ping  : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server2 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server2 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server2 -w 3000.0,80% -c 5000.0,100% -p 1}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server2 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server2 -w 3000.0,80% -c 5000.0,100% -p 1}${endif}
+│  ├─── Shell : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ssh -H Server2 -p 32022|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ssh -H Server2 -p 32022|awk '{print $2}'}"!="OK"}${color red}NO CONNECTION${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ssh -H Server2 -p 32022}${endif}
+│  ├─── Load  : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_load|awk '{print $1}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_load|awk '{print $1}'}"=="WARNING"}${color orange}WARNING${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_load|awk '{print $7$8$9}'|cut -c1-14}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_load|awk '{print $1}'}"=="CRITICAL"}${color red}CRITICAL${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_load|awk '{print $7$8$9}'|cut -c1-14}${endif}
+│  ├─── Users : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_users|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_users|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color} ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_users|awk '{print $3" "$4" "$5}'}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_users|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color} ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_users|awk '{print $3" "$4" "$5" "$6" "$7" "$8}'}${endif}
+│  └─── Disk  : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_disk|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_disk|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_disk|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color}${endif} - ${execbar ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server2 -c check_disk_percentage}
+│
+├──┬─Server3
+│  ├─── Ping  : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server3 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server3 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server3 -w 3000.0,80% -c 5000.0,100% -p 1}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server3 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server3 -w 3000.0,80% -c 5000.0,100% -p 1}${endif}
+│  ├─── Shell : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ssh -H Server3 -p 32022|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ssh -H Server3 -p 32022|awk '{print $2}'}"!="OK"}${color red}NO CONNECTION${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ssh -H Server3 -p 32022}${endif}
+│  ├─── Load  : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_load|awk '{print $1}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_load|awk '{print $1}'}"=="WARNING"}${color orange}WARNING${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_load|awk '{print $7$8$9}'|cut -c1-14}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_load|awk '{print $1}'}"=="CRITICAL"}${color red}CRITICAL${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_load|awk '{print $7$8$9}'|cut -c1-14}${endif}
+│  ├─── Users : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_users|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_users|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color} ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_users|awk '{print $3" "$4" "$5}'}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_users|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color} ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_users|awk '{print $3" "$4" "$5}'}${endif}
+│  └─── Disk  : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_disk|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_disk|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_disk|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color}${endif} - ${execbar ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server3 -c check_disk_percentage}
+│
+└──┬─Server4
+   ├─── Ping  : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server4 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server4 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server4 -w 3000.0,80% -c 5000.0,100% -p 1}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server4 -w 3000.0,80% -c 5000.0,100% -p 1|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ping -H Server4 -w 3000.0,80% -c 5000.0,100% -p 1}${endif}
+   ├─── Shell : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ssh -H Server4 -p 32022|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ssh -H Server4 -p 32022|awk '{print $2}'}"!="OK"}${color red}NO CONNECTION${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_ssh -H Server4 -p 32022}${endif}
+   ├─── Load  : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_load|awk '{print $1}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_load|awk '{print $1}'}"=="WARNING"}${color orange}WARNING${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_load|awk '{print $7$8$9}'|cut -c1-14}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_load|awk '{print $1}'}"=="CRITICAL"}${color red}CRITICAL${color} - ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_load|awk '{print $7$8$9}'|cut -c1-14}${endif}
+   ├─── Users : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_users|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_users|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color} ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_users|awk '{print $3" "$4" "$5}'}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_users|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color} ${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_users|awk '{print $3" "$4" "$5}'}${endif}
+   └─── Disk  : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_disk|awk '{print $2}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_disk|awk '{print $2}'}"=="WARNING"}${color orange}WARNING${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_disk|awk '{print $2}'}"=="CRITICAL"}${color red}CRITICAL${color}${endif} - ${execbar ssh -l nagios nagios-server /usr/local/nagios/libexec/check_nrpe -H Server4 -c check_disk_percentage}
 ]]
