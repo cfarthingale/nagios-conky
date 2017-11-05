@@ -48,7 +48,7 @@ conky.text = [[
 ┌─────┤ Service Monitor - ${time %d %b %Y %H:%M:%S} │
 │     └─────────────────────────────────┬──────┘  ┌──────────────┐
 │                                       └─────────┤ Just Breathe │
-├──┬─nagios-server                                  └──────────────┘
+├──┬─nagios-server                                └──────────────┘
 │  └─── Load  : ${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_load -w 3,3,3 -c 5,5,5|awk '{print $1}'}"=="OK"}${color green}OK${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_load -w 3,3,3 -c 5,5,5|awk '{print $1}'}"=="WARNING"}${color orange}WARNING${color}${endif}${if_match "${exec ssh -l nagios nagios-server /usr/local/nagios/libexec/check_load -w 3,3,3 -c 5,5,5|awk '{print $1}'}"=="CRITICAL"}${color red}CRITICAL${color}${endif}
 │
 ├──┬─Server1
